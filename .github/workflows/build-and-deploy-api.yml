@@ -1,4 +1,4 @@
-name: Build and Deploy API
+name: Build API
 
 on:
   push:
@@ -8,68 +8,19 @@ on:
 
 jobs:
   build:
-    name: Build and Test API
     runs-on: ubuntu-latest
 
     steps:
-      # Étape 1 : Checkout du code source
       - name: Checkout code
         uses: actions/checkout@v4
 
-      # Étape 2 : Installer .NET
       - name: Setup .NET
         uses: actions/setup-dotnet@v3
         with:
           dotnet-version: '9.0'
 
-      # Étape 3 : Restaurer les dépendances
       - name: Restore dependencies
         run: dotnet restore
 
-      # Étape 4 : Construire le projet
       - name: Build the project
         run: dotnet build --no-restore --configuration Release
-
-      # Étape 5 : Publier l'application (générer les fichiers pour déploiement)
-      - name: Publish the API
-        run: dotnet publish -c Release -o ./publish
-
-      # Étape 6 : Installer EF Core CLI (si migrations nécessaires)
-      - name: Install EF Core CLI
-        run: dotnet tool install --global dotnet-ef
-
-      # Étape 7 : Appliquer les migrations (base de données)
-      - name: Apply database migrations
-        env:
-          DOTNET_ROOT: /usr/share/dotnet
-        run: dotnet ef database update --project ./YourProject.csproj
-
-      # Étape 8 : Créer un artefact pour le déploiement
-      - name: Upload artifact for deployment
-        uses: actions/upload-artifact@v3
-        with:
-          name: api-build
-          path: ./publish
-
-  # deploy:
-    #name: Deploy to Azure
-    #needs: build
-    #runs-on: ubuntu-latest
-    #environment:
-      #name: "Production"
-
-    #steps:
-      # Étape 1 : Télécharger l'artefact du job "build"
-      #- name: Download artifact from build job
-        #uses: actions/download-artifact@v3
-        #with:
-          #name: api-build
-
-      # Étape 2 : Déployer sur Azure App Service
-      #- name: Deploy to Azure Web App
-      #  uses: azure/webapps-deploy@v2
-      #  with:
-      #    app-name: 'YourAzureWebAppName'
-      #    slot-name: 'Production'
-      #    publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
-      #    package: ./api-build
