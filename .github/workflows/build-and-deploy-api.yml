@@ -51,19 +51,19 @@ jobs:
           name: api-build
           path: ./publish
 
-  deploy:
-    name: Deploy to Azure
-    needs: build
-    runs-on: ubuntu-latest
-    environment:
-      name: "Production"
+  # deploy:
+    #name: Deploy to Azure
+    #needs: build
+    #runs-on: ubuntu-latest
+    #environment:
+      #name: "Production"
 
-    steps:
+    #steps:
       # Étape 1 : Télécharger l'artefact du job "build"
-      - name: Download artifact from build job
-        uses: actions/download-artifact@v3
-        with:
-          name: api-build
+      #- name: Download artifact from build job
+        #uses: actions/download-artifact@v3
+        #with:
+          #name: api-build
 
       # Étape 2 : Déployer sur Azure App Service
       #- name: Deploy to Azure Web App
