@@ -11,8 +11,8 @@ services:
       - 15672:15672 #web
       - 5672:5672 #amqp
     environment:
-      - RABBITMQ_DEFAULT_USER=admin
-      - RABBITMQ_DEFAULT_PASS=admin
+      - RABBITMQ_DEFAULT_USER=String.format(System.getenv("RABBITMQ_DEFAULT_USER"))
+      - RABBITMQ_DEFAULT_PASS=String.format(System.getenv("RABBITMQ_DEFAULT_PASS"))
   mssql:
     image: mcr.microsoft.com/mssql/server:2022-latest
     container_name: lab_mssql
@@ -22,7 +22,6 @@ services:
       - D:\repositories\perso\aptar\data\mssql_data:/var/opt/mssql/data/
     environment:
       - ACCEPT_EULA=Y
-      - MSSQL_SA_PASSWORD=P@ssw0rd2023!
   api:
     build: ./RabbitMqProductAPI
     # scale: 3
@@ -30,9 +29,9 @@ services:
       - 8090:8080
     environment:
       - public static string ConnectionString = String.format("server=database-server;uid=user;pwd=%s;database=ProductionData", System.getenv("DB_PASSWORD"))
-      - RabbitMQ__Hostname=rabbitmq
-      - RabbitMQ__Username=admin
-      - RabbitMQ__Password=admin
+      - RabbitMQ__Hostname=String.format(System.getenv("RabbitMQ__Hostname"))
+      - RabbitMQ__Username=String.format(System.getenv("RabbitMQ__Username"))
+      - RabbitMQ__Password=String.format(System.getenv("RabbitMQ__Password"))
     depends_on:
       - rabbitmq
       - mssql
@@ -48,9 +47,9 @@ services:
     build: ./RabbitMQProduct.ConsoleApplication
     container_name: lab_console
     environment:
-      - RabbitMQ__Hostname=rabbitmq
-      - RabbitMQ__Username=admin
-      - RabbitMQ__Password=admin
+      - RabbitMQ__Hostname=String.format(System.getenv("RabbitMQ__Hostname"))
+      - RabbitMQ__Username=String.format(System.getenv("RabbitMQ__Username"))
+      - RabbitMQ__Password=String.format(System.getenv("RabbitMQ__Password"))
     depends_on:
       rabbitmq:
         condition: service_healthy
