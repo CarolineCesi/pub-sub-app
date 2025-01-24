@@ -46,7 +46,7 @@ namespace RabbitMqProductAPI.Services
             var filteredData = _dbContext.Products.Where(x => x.ProductId == Id).FirstOrDefault();
             var result = _dbContext.Remove(filteredData);
             _dbContext.SaveChanges();
-            return result != null ? true : false;
+            return result != null;
         }
     }
 }
